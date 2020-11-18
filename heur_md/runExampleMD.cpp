@@ -2,7 +2,7 @@
 
 #include "IOUtil.hpp"
 #include "Point.hpp"
-#include "HeuristicGRMR.h"
+#include "HeurCoreset.h"
 #include "Validation.hpp"
 
 using namespace std;
@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     double eps = 0.4;
 
     double t2 = 0.0;
-    HeuristicGRMR heuristicGrmr(eps, points);
+    HeurCoreset heuristicGrmr(eps, points);
     heuristicGrmr.construct_graph_2d(t2);
     heuristicGrmr.G.print();
 

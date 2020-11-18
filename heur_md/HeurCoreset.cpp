@@ -5,10 +5,10 @@
 #include <glpk.h>
 
 #include "IOUtil.hpp"
-#include "HeuristicGRMR.h"
+#include "HeurCoreset.h"
 #include "SetCover.hpp"
 
-HeuristicGRMR::HeuristicGRMR(double eps, const vector<Point> &extremes) {
+HeurCoreset::HeurCoreset(double eps, const vector<Point> &extremes) {
     for (const Point &p : extremes)
         this->extremes.push_back(p);
     this->dim = this->extremes[0].get_dimension();
@@ -26,7 +26,7 @@ HeuristicGRMR::HeuristicGRMR(double eps, const vector<Point> &extremes) {
     this->G.add_vertices(this->N);
 }
 
-void HeuristicGRMR::construct_IPDG(const char *filename, double &time) {
+void HeurCoreset::construct_IPDG(const char *filename, double &time) {
     set<pair<int, int>> topk_results;
     IOUtil::read_topk_results(filename, topk_results);
 
@@ -40,7 +40,7 @@ void HeuristicGRMR::construct_IPDG(const char *filename, double &time) {
     time = duration.count();
 }
 
-void HeuristicGRMR::construct_graph(double &time) {
+void HeurCoreset::construct_graph(double &time) {
     auto start = chrono::high_resolution_clock::now();
 
     for (int i = 0; i < N; ++i) {
@@ -72,7 +72,7 @@ void HeuristicGRMR::construct_graph(double &time) {
     time = duration.count();
 }
 
-void HeuristicGRMR::construct_graph_2d(double &time) {
+void HeurCoreset::construct_graph_2d(double &time) {
     sort(extremes.begin(), extremes.end());
 
     auto start = chrono::high_resolution_clock::now();
@@ -104,7 +104,7 @@ void HeuristicGRMR::construct_graph_2d(double &time) {
     time = duration.count();
 }
 
-vector<int> HeuristicGRMR::compute_result(double delta, double &time) {
+vector<int> HeurCoreset::compute_result(double delta, double &time) {
     auto start = chrono::high_resolution_clock::now();
 
     vector<unordered_set<int>> sets;
@@ -120,7 +120,7 @@ vector<int> HeuristicGRMR::compute_result(double delta, double &time) {
     return cov;
 }
 
-double HeuristicGRMR::edge_weight(int i, int j) {
+double HeurCoreset::edge_weight(int i, int j) {
     int num_var = dim;
     int num_cons = (int) IPDG.edges[j].size() + 1;
 
@@ -179,7 +179,7 @@ double HeuristicGRMR::edge_weight(int i, int j) {
     return z;
 }
 
-double HeuristicGRMR::edge_weight_2d(int i, int j) {
+double HeurCoreset::edge_weight_2d(int i, int j) {
     int ia[7], ja[7];
     double ar[7], z;
 

@@ -1,16 +1,16 @@
 #include <algorithm>
 #include <chrono>
 
-#include "ExactGRMR.h"
+#include "OptimalCoreset.h"
 #include "IOUtil.hpp"
 
-ExactGRMR::ExactGRMR(double eps, const vector<Point2D> &points) {
+OptimalCoreset::OptimalCoreset(double eps, const vector<Point2D> &points) {
     this->eps = eps;
     for (Point2D p : points)
         this->points.push_back(p);
 }
 
-void ExactGRMR::sort_counter_clockwise(double &time) {
+void OptimalCoreset::sort_counter_clockwise(double &time) {
     auto start = chrono::high_resolution_clock::now();
 
     sort(points.begin(), points.end());
@@ -20,7 +20,7 @@ void ExactGRMR::sort_counter_clockwise(double &time) {
     time = duration.count();
 }
 
-void ExactGRMR::compute_convex_hull(double &time) {
+void OptimalCoreset::compute_convex_hull(double &time) {
     auto start = chrono::high_resolution_clock::now();
     int n = points.size();
 
@@ -48,7 +48,7 @@ void ExactGRMR::compute_convex_hull(double &time) {
     time = duration.count();
 }
 
-void ExactGRMR::select_candidates(double &time) {
+void OptimalCoreset::select_candidates(double &time) {
     auto start = chrono::high_resolution_clock::now();
     int n = points.size(), m = convex_hull.size();
 
@@ -83,7 +83,7 @@ void ExactGRMR::select_candidates(double &time) {
     time = duration.count();
 }
 
-void ExactGRMR::construct_graph(double &time) {
+void OptimalCoreset::construct_graph(double &time) {
     auto start = chrono::high_resolution_clock::now();
     int n = candidates.size();
     this->G.add_vertices(candidates);
@@ -106,7 +106,7 @@ void ExactGRMR::construct_graph(double &time) {
     time = duration.count();
 }
 
-void ExactGRMR::fast_construct_graph(double &time) {
+void OptimalCoreset::fast_construct_graph(double &time) {
     auto start = chrono::high_resolution_clock::now();
     int n = convex_hull.size();
     for (int idx : convex_hull)
@@ -131,7 +131,7 @@ void ExactGRMR::fast_construct_graph(double &time) {
     time = duration.count();
 }
 
-vector<int> ExactGRMR::compute_result(double &time) {
+vector<int> OptimalCoreset::compute_result(double &time) {
     auto start = chrono::high_resolution_clock::now();
 
     int pivot = *(convex_hull.begin());
@@ -195,14 +195,14 @@ vector<int> ExactGRMR::compute_result(double &time) {
     return min_cycle;
 }
 
-int ExactGRMR::orientation(Point2D p, Point2D q, Point2D r) {
+int OptimalCoreset::orientation(Point2D p, Point2D q, Point2D r) {
     double val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
     if (abs(val) < 1e-6)
         return 0;
     return (val > 0) ? 1 : 2;
 }
 
-double ExactGRMR::edge_weight(int s, int t) {
+double OptimalCoreset::edge_weight(int s, int t) {
     double weight = 0.0;
     Point2D dir(points[t].y - points[s].y, points[s].x - points[t].x);
     if (s < t) {

@@ -3,7 +3,7 @@
 
 #include "IOUtil.hpp"
 #include "Point2D.hpp"
-#include "ExactGRMR.h"
+#include "OptimalCoreset.h"
 #include "Validation.hpp"
 
 using namespace std;
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 
     cout << "eps=" << eps << endl;
 
-    ExactGRMR exactGrmr(eps, points);
+    OptimalCoreset exactGrmr(eps, points);
     exactGrmr.sort_counter_clockwise(time[0]);
 
     for (int i = 0; i < 50; ++i) {

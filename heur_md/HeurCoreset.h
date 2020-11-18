@@ -10,7 +10,7 @@
 
 using namespace std;
 
-class HeuristicGRMR {
+class HeurCoreset {
 public:
     int dim, N;
     double MIN_WEIGHT;
@@ -18,7 +18,7 @@ public:
     DelaunayGraph IPDG;
     DominanceGraph G;
 
-    HeuristicGRMR(double eps, const vector<Point> &extremes);
+    HeurCoreset(double eps, const vector<Point> &extremes);
 
     void construct_IPDG(const char *filename, double &time);
 

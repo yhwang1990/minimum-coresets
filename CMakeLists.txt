@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
-project(GRMR)
+project(minimum-coresets)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories(graph exact_grmr heuristic_grmr utils)
+include_directories(graph opt_2d heur_md utils)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/module_path")
 
@@ -11,78 +11,66 @@ find_package(GLPK REQUIRED)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
-add_executable(ExactGRMR
+add_executable(opt
         graph/Digraph.hpp
-        exact_grmr/ExactGRMR.cpp
-        exact_grmr/ExactGRMR.h
-        exact_grmr/runExactGRMR.cpp
+        opt_2d/OptimalCoreset.cpp
+        opt_2d/OptimalCoreset.h
+        opt_2d/runOpt2D.cpp
         utils/IOUtil.hpp
         utils/Point2D.hpp
         utils/Validation.hpp)
 
-add_executable(ExactGRMRLoss
+add_executable(opt_loss
         graph/Digraph.hpp
-        exact_grmr/ExactGRMR.cpp
-        exact_grmr/ExactGRMR.h
-        exact_grmr/runExactGRMRLoss.cpp
+        opt_2d/OptimalCoreset.cpp
+        opt_2d/OptimalCoreset.h
+        opt_2d/runOpt2DLoss.cpp
         utils/IOUtil.hpp
         utils/Point2D.hpp
         utils/Validation.hpp)
 
-add_executable(Example2D
+add_executable(example_2d
         graph/Digraph.hpp
-        exact_grmr/ExactGRMR.cpp
-        exact_grmr/ExactGRMR.h
-        exact_grmr/runExample2D.cpp
+        opt_2d/OptimalCoreset.cpp
+        opt_2d/OptimalCoreset.h
+        opt_2d/runExample2D.cpp
         utils/IOUtil.hpp
         utils/Point2D.hpp
         utils/Validation.hpp)
 
-add_executable(HeurGRMR
+add_executable(heur
         graph/DelaunayGraph.hpp
         graph/DominanceGraph.hpp
-        heuristic_grmr/HeuristicGRMR.h
-        heuristic_grmr/HeuristicGRMR.cpp
-        heuristic_grmr/runGRMR.cpp
+        heur_md/HeurCoreset.h
+        heur_md/HeurCoreset.cpp
+        heur_md/runHeurMD.cpp
         utils/IOUtil.hpp
         utils/Point.hpp
         utils/SetCover.hpp
         utils/Validation.hpp)
 
-add_executable(HeurGRMRLoss
+add_executable(heur_loss
         graph/DelaunayGraph.hpp
         graph/DominanceGraph.hpp
-        heuristic_grmr/HeuristicGRMR.h
-        heuristic_grmr/HeuristicGRMR.cpp
-        heuristic_grmr/runGRMRLoss.cpp
+        heur_md/HeurCoreset.h
+        heur_md/HeurCoreset.cpp
+        heur_md/runHeurMDLoss.cpp
         utils/IOUtil.hpp
         utils/Point.hpp
         utils/SetCover.hpp
         utils/Validation.hpp)
 
-add_executable(DualGRMR
+add_executable(example_md
         graph/DelaunayGraph.hpp
         graph/DominanceGraph.hpp
-        heuristic_grmr/HeuristicGRMR.h
-        heuristic_grmr/HeuristicGRMR.cpp
-        heuristic_grmr/runDualGRMR.cpp
+        heur_md/HeurCoreset.h
+        heur_md/HeurCoreset.cpp
+        heur_md/runExampleMD.cpp
         utils/IOUtil.hpp
         utils/Point.hpp
         utils/SetCover.hpp
         utils/Validation.hpp)
 
-add_executable(ExampleHD
-        graph/DelaunayGraph.hpp
-        graph/DominanceGraph.hpp
-        heuristic_grmr/HeuristicGRMR.h
-        heuristic_grmr/HeuristicGRMR.cpp
-        heuristic_grmr/runExampleHD.cpp
-        utils/IOUtil.hpp
-        utils/Point.hpp
-        utils/SetCover.hpp
-        utils/Validation.hpp)
-
-target_link_libraries(HeurGRMR PUBLIC glpk)
-target_link_libraries(HeurGRMRLoss PUBLIC glpk)
-target_link_libraries(DualGRMR PUBLIC glpk)
-target_link_libraries(ExampleHD PUBLIC glpk)
+target_link_libraries(heur PUBLIC glpk)
+target_link_libraries(heur_loss PUBLIC glpk)
+target_link_libraries(example_md PUBLIC glpk)

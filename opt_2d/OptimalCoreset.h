@@ -10,7 +10,7 @@
 
 using namespace std;
 
-class ExactGRMR {
+class OptimalCoreset {
 public:
     double eps;
     vector<Point2D> points;
@@ -18,7 +18,7 @@ public:
     vector<int> candidates;
     Digraph G;
 
-    ExactGRMR(double eps, const vector<Point2D> &points);
+    OptimalCoreset(double eps, const vector<Point2D> &points);
 
     void sort_counter_clockwise(double &time);
 
