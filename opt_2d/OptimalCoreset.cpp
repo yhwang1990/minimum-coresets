@@ -204,6 +204,14 @@ int OptimalCoreset::orientation(Point2D p, Point2D q, Point2D r) {
 
 double OptimalCoreset::edge_weight(int s, int t) {
     double weight = 0.0;
+
+    auto conv_first = convex_hull.begin(), conv_last = convex_hull.end();
+    conv_last--;
+    if (s > t && t < *conv_first && s > *conv_last)
+        return 1.0;
+    if (convex_hull.lower_bound(s) == convex_hull.lower_bound(t))
+        return 1.0;
+
     Point2D dir(points[t].y - points[s].y, points[s].x - points[t].x);
     if (s < t) {
         auto it = convex_hull.lower_bound(s);

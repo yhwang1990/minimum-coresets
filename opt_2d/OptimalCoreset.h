@@ -1,5 +1,5 @@
-#ifndef EXACT_GRMR_H
-#define EXACT_GRMR_H
+#ifndef OPTIMAL_H
+#define OPTIMAL_H
 
 #include <cassert>
 #include <set>
@@ -38,4 +38,4 @@ private:
     double edge_weight(int s, int t);
 };
 
-#endif // EXACT_GRMR_H
+#endif // OPTIMAL_H
