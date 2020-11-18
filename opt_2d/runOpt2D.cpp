@@ -4,7 +4,6 @@
 #include "IOUtil.hpp"
 #include "Point2D.hpp"
 #include "OptimalCoreset.h"
-#include "Validation.hpp"
 
 using namespace std;
 
@@ -22,19 +21,19 @@ int main(int argc, char *argv[]) {
 
     output_file << "dataset=" << dataset_path << "\n";
 
-    double params[] = {0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1};
+    double params[] = {0.0001, 0.0025, 0.0005, 0.001, 0.025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.15, 0.2, 0.25};
     double time[] = {0, 0, 0, 0, 0};
 
     for (double eps : params) {
         cout << "eps=" << eps << endl;
 
-        OptimalCoreset exactGrmr(eps, points);
-        exactGrmr.sort_counter_clockwise(time[0]);
-        exactGrmr.compute_convex_hull(time[1]);
-        exactGrmr.select_candidates(time[2]);
-        exactGrmr.construct_graph(time[3]);
+        OptimalCoreset opt_2d(eps, points);
+        opt_2d.sort_counter_clockwise(time[0]);
+        opt_2d.compute_convex_hull(time[1]);
+        opt_2d.select_candidates(time[2]);
+        opt_2d.construct_graph(time[3]);
 
-        vector<int> result_idx = exactGrmr.compute_result(time[4]);
+        vector<int> result_idx = opt_2d.compute_result(time[4]);
 
         double total_time = 0.0;
         for (int i = 2; i < 5; i++)
