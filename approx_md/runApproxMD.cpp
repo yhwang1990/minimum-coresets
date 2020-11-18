@@ -136,9 +136,8 @@ int main(int argc, char **argv) {
     output_file << "dataset=" << argv[3] << " eps=" << eps << "\n" << flush;
     output_file.flush();
 
-    vector<size_t> idx;
     double time = 0;
-    idx = approx_coreset(points, eps, time);
+    vector<int> idx = approx_coreset(points, eps, time);
 
     int size = idx.size();
     time = (double) time / 1000.0;
