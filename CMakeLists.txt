@@ -11,6 +11,12 @@ find_package(GLPK REQUIRED)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
+add_executable(approx
+        approx_md/runApproxMD.cpp
+        utils/IOUtil.hpp
+        utils/Point2D.hpp
+        utils/Validation.hpp)
+
 add_executable(opt
         graph/Digraph.hpp
         opt_2d/OptimalCoreset.cpp
@@ -71,6 +77,7 @@ add_executable(example_md
         utils/SetCover.hpp
         utils/Validation.hpp)
 
+target_link_libraries(approx PUBLIC ann)
 target_link_libraries(heur PUBLIC glpk)
 target_link_libraries(heur_loss PUBLIC glpk)
 target_link_libraries(example_md PUBLIC glpk)
