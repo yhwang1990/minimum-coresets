@@ -139,6 +139,8 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
 
         isValid = validate(points, coresetIdxs, epsilon);
 
+        cout << uIdx << "," << coresetIdxs.size() << "," << isValid << endl;
+
         if (ss < 1000000)
             ss = 2 * ss;
     }
