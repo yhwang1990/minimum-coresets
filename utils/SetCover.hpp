@@ -63,8 +63,11 @@ void SetCover::get_min_cover_greedy(int n, const vector<unordered_set<int>> &set
         uncovered.insert(i);
 
     priority_queue<Item> queue;
-    for (int i = 0; i < n; i++)
-        queue.emplace(i, sets[i].size(), 0);
+    for (int i = 0; i < sets.size(); i++) {
+        if (!sets[i].empty()) {
+            queue.emplace(i, sets[i].size(), 0);
+        }
+    }
 
     int round = 1;
     vector<int> tmp;

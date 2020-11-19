@@ -67,6 +67,7 @@ bool validate(const vector<Point> &points, vector<int> &idx, double epsilon) {
 
 vector<int> approx_coreset(const vector<Point> &points, const double epsilon, double &time) {
     int dim = points[0].get_dimension();
+    int n = points.size();
 
     ANNpointArray dataPts;
     ANNpoint queryPt;
@@ -75,12 +76,12 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
     ANNkd_tree *kdTree;
 
     queryPt = annAllocPt(dim + 1);
-    dataPts = annAllocPts(points.size(), dim + 1);
+    dataPts = annAllocPts(n, dim + 1);
 
     firstIdx = new ANNidx[1];
     firstDist = new ANNdist[1];
 
-    for (int i = 0; i < points.size(); ++i) {
+    for (int i = 0; i < n; ++i) {
         double sum = 0.0;
         for (int j = 0; j < dim; ++j) {
             dataPts[i][j] = points[i].get_coordinate(j);
@@ -89,20 +90,24 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
         dataPts[i][dim] = sqrt(dim - sum);
     }
 
-    kdTree = new ANNkd_tree(dataPts, points.size(), dim + 1);
+    kdTree = new ANNkd_tree(dataPts, n, dim + 1);
 
     vector<int> coresetIdxs;
     int ss = 16;
     int uIdx = 0;
 
-    vector<unordered_set<int>> setSystem;
-    setSystem.reserve(points.size());
+    vector<unordered_set<int>> setSystem(n);
+
+    for (int i = 0; i < n; ++i) {
+        unordered_set<int> setI;
+        setSystem.push_back(setI);
+    }
 
     bool isValid = false;
     while (!isValid) {
         clock_t clockS = clock();
 
-        for (int i = 0; i < ss; ++i) {
+        for (int i = 0; i < ss; i++) {
             get_rand_dir(dim, queryPt);
             kdTree->annkSearch(queryPt, 1, firstIdx, firstDist, 0);
 
@@ -111,12 +116,12 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
 
             ANNdist sqRad = dim + 1.0 - 2.0 * (1 - epsilon / 2.0) * inner_product(dim, queryPt, dataPts[firstIdx[0]]);
 
-            auto approxIdx = new ANNidx[points.size()];
-            auto approxDist = new ANNdist[points.size()];
+            auto approxIdx = new ANNidx[n];
+            auto approxDist = new ANNdist[n];
 
-            kdTree->annkFRSearch(queryPt, sqRad, points.size(), approxIdx, approxDist);
+            kdTree->annkFRSearch(queryPt, sqRad, n, approxIdx, approxDist);
 
-            for (int idx = 0; idx < points.size(); ++idx) {
+            for (int idx = 0; idx < n; idx++) {
                 if (approxIdx[idx] != ANN_NULL_IDX) {
                     resultIdxs.insert(approxIdx[idx]);
                 } else {
@@ -124,14 +129,12 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
                 }
             }
 
-            for (int pIdx : resultIdxs) {
+            for (int pIdx : resultIdxs)
                 setSystem[pIdx].insert(uIdx);
-            }
 
             ++uIdx;
         }
 
-        coresetIdxs.clear();
         SetCover::get_min_cover_greedy(uIdx, setSystem, coresetIdxs);
 
         clock_t clockE = clock();
