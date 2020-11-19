@@ -1,11 +1,13 @@
 #include <vector>
-#include <set>
+#include <unordered_set>
 #include <iostream>
 #include <fstream>
 #include <random>
+#include <ANN/ANN.h>
 
 #include "Point.hpp"
 #include "IOUtil.hpp"
+#include "SetCover.hpp"
 
 using namespace std;
 
@@ -15,18 +17,26 @@ vector<double> results;
 default_random_engine generator(0);
 normal_distribution<double> distribution(0.0, 1.0);
 
-Point get_rand_dir(int dim) {
-    vector<double> coords(dim);
+void get_rand_dir(int dim, ANNpoint p) {
     double len = 0;
-    for (int i = 0; i < dim; i++) {
-        coords[i] = distribution(generator);
-        len += (coords[i] * coords[i]);
+    while (len == 0) {
+        for (int i = 0; i < dim; i++) {
+            p[i] = distribution(generator);
+            len += (p[i] * p[i]);
+        }
+        len = sqrt(len);
     }
-    len = sqrt(len);
     for (int i = 0; i < dim; i++)
-        coords[i] = coords[i] / len;
-    Point p(dim, coords);
-    return p;
+        p[i] = p[i] / len;
+    p[dim] = 0;
+}
+
+double inner_product(int dim, const ANNpoint &p, const ANNpoint &q) {
+    double sum = 0;
+    for (int i = 0; i < dim; i++) {
+        sum += (p[i] * q[i]);
+    }
+    return sum;
 }
 
 bool validate(const vector<Point> &points, vector<int> &idx, double epsilon) {
@@ -58,60 +68,82 @@ bool validate(const vector<Point> &points, vector<int> &idx, double epsilon) {
 vector<int> approx_coreset(const vector<Point> &points, const double epsilon, double &time) {
     int dim = points[0].get_dimension();
 
-    vector<int> idx;
-    size_t ss = 16;
-    bool cond = false;
-    while (!cond) {
+    ANNpointArray dataPts;
+    ANNpoint queryPt;
+    ANNidxArray firstIdx;
+    ANNdistArray firstDist;
+    ANNkd_tree *kdTree;
+
+    queryPt = annAllocPt(dim + 1);
+    dataPts = annAllocPts(points.size(), dim + 1);
+
+    firstIdx = new ANNidx[1];
+    firstDist = new ANNdist[1];
+
+    for (int i = 0; i < points.size(); ++i) {
+        double sum = 0.0;
+        for (int j = 0; j < dim; ++j) {
+            dataPts[i][j] = points[i].get_coordinate(j);
+            sum += (dataPts[i][j] * dataPts[i][j]);
+        }
+        dataPts[i][dim] = sqrt(dim - sum);
+    }
+
+    kdTree = new ANNkd_tree(dataPts, points.size(), dim + 1);
+
+    vector<int> coresetIdxs;
+    int ss = 16;
+    int uIdx = 0;
+
+    vector<unordered_set<int>> setSystem;
+    setSystem.reserve(points.size());
+
+    bool isValid = false;
+    while (!isValid) {
         clock_t clockS = clock();
 
-        vector<Point> randomDirs;
+        for (int i = 0; i < ss; ++i) {
+            get_rand_dir(dim, queryPt);
+            kdTree->annkSearch(queryPt, 1, firstIdx, firstDist, 0);
 
-        get_rand_dir(1.0, dim, ss, randomP, false);
+            set<int> resultIdxs;
+            resultIdxs.insert(firstIdx[0]);
 
-        vector<set<size_t>> DSets;
-        int k = 1;
-        int flag;
-        for (size_t i = 0; i < ss; i++) {
-            set<size_t> DSet;
-            vector<size_t> topkI;
-            vector<double> topkV;
-            size_t k1 = (10 * k <= fatP.size()) ? 10 * k : fatP.size();
+            ANNdist sqRad = dim + 1.0 - 2.0 * (1 - epsilon / 2.0) * inner_product(dim, queryPt, dataPts[firstIdx[0]]);
 
-            rank_selection_dotp(fatP, randomP[i], k1, topkI, topkV);
+            auto approxIdx = new ANNidx[points.size()];
+            auto approxDist = new ANNdist[points.size()];
 
-            assert(topkV[k1 - 1] >= 0);
-            flag = 1;
-            for (size_t j = 0; j < idxs.size(); j++) {
-                if (fatP[idxs[j]].dotP(randomP[i]) >= (1 - epsilon) * topkV[k - 1]) {
-                    flag = 0;
+            kdTree->annkFRSearch(queryPt, sqRad, points.size(), approxIdx, approxDist);
+
+            for (int idx = 0; idx < points.size(); ++idx) {
+                if (approxIdx[idx] != ANN_NULL_IDX) {
+                    resultIdxs.insert(approxIdx[idx]);
+                } else {
+                    break;
                 }
             }
-            if (flag == 1) {
-                for (size_t j = 0; j < k1; j++) {
-                    if (topkV[j] >= (1 - epsilon) * topkV[k - 1]) {
-                        DSet.insert(topkI[j]);
-                    } else {
-                        break;
-                    }
-                }
-                DSets.push_back(DSet);
+
+            for (int pIdx : resultIdxs) {
+                setSystem[pIdx].insert(uIdx);
             }
+
+            ++uIdx;
         }
 
-        vector<size_t> idxs2;
-        HSApprox::get_hs_approximation<size_t>(DSets, idxs2);
-        for (size_t j = 0; j < idxs2.size(); j++) {
-            idxs.push_back(idxs2[j]);
-        }
+        coresetIdxs.clear();
+        SetCover::get_min_cover_greedy(uIdx, setSystem, coresetIdxs);
 
         clock_t clockE = clock();
         time += (double) (clockE - clockS);
 
-        cond = validate(points, idx, epsilon);
-        ss = 2 * ss;
+        isValid = validate(points, coresetIdxs, epsilon);
+
+        if (ss < 1000000)
+            ss = 2 * ss;
     }
 
-    return idx;
+    return coresetIdxs;
 }
 
 int main(int argc, char **argv) {
@@ -137,9 +169,9 @@ int main(int argc, char **argv) {
     output_file.flush();
 
     double time = 0;
-    vector<int> idx = approx_coreset(points, eps, time);
+    vector<int> coresetIdxs = approx_coreset(points, eps, time);
 
-    int size = idx.size();
+    int size = coresetIdxs.size();
     time = (double) time / 1000.0;
 
     output_file << "time=" << time << " size=" << size << "\n" << flush;
