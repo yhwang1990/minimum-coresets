@@ -2,7 +2,6 @@
 #include <chrono>
 
 #include "OptimalCoreset.h"
-#include "IOUtil.hpp"
 
 OptimalCoreset::OptimalCoreset(double eps, const vector<Point2D> &points) {
     this->eps = eps;
@@ -108,13 +107,14 @@ void OptimalCoreset::construct_graph(double &time) {
 
 void OptimalCoreset::fast_construct_graph(double &time) {
     auto start = chrono::high_resolution_clock::now();
-    int n = convex_hull.size();
+    int m = convex_hull.size();
+    candidates.clear();
     for (int idx : convex_hull)
         candidates.push_back(idx);
     G.add_vertices(candidates);
 
-    for (int i = 0; i < n; ++i) {
-        int j = (i + 1) % n;
+    for (int i = 0; i < m; i++) {
+        int j = (i + 1) % m;
         while (true) {
             double weight = edge_weight(candidates[i], candidates[j]);
             if (weight >= 0 && weight <= eps) {
@@ -123,7 +123,7 @@ void OptimalCoreset::fast_construct_graph(double &time) {
                 if (convex_hull.find(candidates[j]) != convex_hull.end())
                     break;
             }
-            j = (j + 1) % n;
+            j = (j + 1) % m;
         }
     }
     auto stop = chrono::high_resolution_clock::now();
@@ -203,15 +203,12 @@ int OptimalCoreset::orientation(Point2D p, Point2D q, Point2D r) {
 }
 
 double OptimalCoreset::edge_weight(int s, int t) {
+    if (convex_hull.find(s) == convex_hull.end() && convex_hull.find(t) == convex_hull.end()) {
+        if (convex_hull.lower_bound(s) == convex_hull.lower_bound(t))
+            return 1.0;
+    }
+
     double weight = 0.0;
-
-    auto conv_first = convex_hull.begin(), conv_last = convex_hull.end();
-    conv_last--;
-    if (s > t && t < *conv_first && s > *conv_last)
-        return 1.0;
-    if (convex_hull.lower_bound(s) == convex_hull.lower_bound(t))
-        return 1.0;
-
     Point2D dir(points[t].y - points[s].y, points[s].x - points[t].x);
     if (s < t) {
         auto it = convex_hull.lower_bound(s);
