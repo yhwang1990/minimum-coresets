@@ -8,6 +8,12 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
+    if (argc != 9) {
+        cerr << "usage: ./heur <mode> <dim> <eps> <dataset_path> <graph_path> <dirs_path>"
+                "<validation_path> <output_path>" << endl;
+        exit(EXIT_FAILURE);
+    }
+
     int mode = stoi(argv[1]);
     int dim = stoi(argv[2]);
     double eps = stod(argv[3]);
@@ -43,7 +49,7 @@ int main(int argc, char *argv[]) {
         ofstream output_file;
         output_file.open(output_path, ofstream::out | ofstream::app);
 
-        output_file << "dataset=" << dataset_path << " eps=" << eps << "\n";
+        output_file << "dataset=" << dataset_path << " eps=" << eps;
         output_file.flush();
 
         cout << "eps=" << eps << endl;

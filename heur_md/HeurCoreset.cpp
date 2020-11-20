@@ -13,6 +13,9 @@ HeurCoreset::HeurCoreset(const vector<Point> &extremes) {
         this->extremes.push_back(p);
     this->dim = this->extremes[0].get_dimension();
 
+    if (this->dim == 2)
+        sort(this->extremes.begin(), this->extremes.end());
+
     this->N = this->extremes.size();
     this->MIN_WEIGHT = 1e-4;
 
@@ -60,8 +63,6 @@ void HeurCoreset::construct_graph(double &time) {
 }
 
 void HeurCoreset::construct_graph_2d(double &time) {
-    sort(extremes.begin(), extremes.end());
-
     auto start = chrono::high_resolution_clock::now();
     for (int i = 0; i < N; ++i) {
         int j = (i + 1) % N;
