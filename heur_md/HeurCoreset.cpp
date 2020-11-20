@@ -8,36 +8,23 @@
 #include "HeurCoreset.h"
 #include "SetCover.hpp"
 
-HeurCoreset::HeurCoreset(double eps, const vector<Point> &extremes) {
+HeurCoreset::HeurCoreset(const vector<Point> &extremes) {
     for (const Point &p : extremes)
         this->extremes.push_back(p);
     this->dim = this->extremes[0].get_dimension();
 
     this->N = this->extremes.size();
-
-    if (eps < 0.015)
-        this->MIN_WEIGHT = 1.0 - 4.0 * eps;
-    else if (eps < 0.035)
-        this->MIN_WEIGHT = 1.0 - 3.0 * eps;
-    else
-        this->MIN_WEIGHT = 1.0 - 2.5 * eps;
+    this->MIN_WEIGHT = 1e-4;
 
     this->IPDG.add_vertices(this->N);
     this->G.add_vertices(this->N);
 }
 
-void HeurCoreset::construct_IPDG(const char *filename, double &time) {
-    set<pair<int, int>> topk_results;
-    IOUtil::read_topk_results(filename, topk_results);
-
-    auto start = chrono::high_resolution_clock::now();
-
-    for (auto &item : topk_results)
+void HeurCoreset::read_IPDG(const char *filename) {
+    vector<pair<int, int>> edges;
+    IOUtil::read_IPDG(filename, edges);
+    for (auto &item : edges)
         IPDG.add_edge(item.first, item.second);
-
-    auto stop = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
-    time = duration.count();
 }
 
 void HeurCoreset::construct_graph(double &time) {

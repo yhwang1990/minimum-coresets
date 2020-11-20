@@ -80,7 +80,7 @@ public:
         input_file.close();
     }
 
-    static void read_topk_results(const char *filename, set<pair<int, int>> &topk_results) {
+    static void read_IPDG(const char *filename, vector<pair<int, int>> &edges) {
         ifstream input_file(filename);
 
         if (!input_file.is_open()) {
@@ -88,22 +88,13 @@ public:
             exit(1);
         }
 
-        int q1 = -1, q2 = -1, p1 = -1, p2 = -1;
-        double score = -1;
+        int s, t;
         string str;
         while (getline(input_file, str)) {
             stringstream ss(str);
-            ss >> q2;
-            ss >> p2;
-            ss >> score;
-
-            if (q1 == q2) {
-                if (p1 != p2 && score > 0)
-                    topk_results.insert(make_pair(p1, p2));
-            } else {
-                q1 = q2;
-                p1 = p2;
-            }
+            ss >> s;
+            ss >> t;
+            edges.emplace_back(s, t);
         }
 
         input_file.close();

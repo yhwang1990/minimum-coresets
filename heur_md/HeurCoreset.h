@@ -18,9 +18,9 @@ public:
     DelaunayGraph IPDG;
     DominanceGraph G;
 
-    HeurCoreset(double eps, const vector<Point> &extremes);
+    explicit HeurCoreset(const vector<Point> &extremes);
 
-    void construct_IPDG(const char *filename, double &time);
+    void read_IPDG(const char *filename);
 
     void construct_graph(double &time);
 
