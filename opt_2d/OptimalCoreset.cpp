@@ -142,20 +142,17 @@ vector<int> OptimalCoreset::compute_result(double &time) {
 
     int min_length = INT_MAX;
     vector<int> min_cycle, cycle;
-    bool is_shortest = false;
     for (auto &it : pairs) {
         G.shortest_path(it.second, it.first, cycle);
         if (cycle.size() < min_length) {
             min_length = cycle.size();
             min_cycle = cycle;
         }
-        if (min_length <= 4) {
-            is_shortest = true;
+        if (min_length <= 3)
             break;
-        }
     }
 
-    if (is_shortest) {
+    if (min_length == 3) {
         auto stop = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
         time = duration.count();
