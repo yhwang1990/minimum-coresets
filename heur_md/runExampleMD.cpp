@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int main(int argc, char *argv[]) {
+int main() {
 
     string dataset_path = "../examples/example_ex.txt";
 
@@ -16,12 +16,10 @@ int main(int argc, char *argv[]) {
 
     IOUtil::read_input_points(dataset_path.c_str(), 2, points);
 
-    double eps = 0.4;
-
     double t2 = 0.0;
-    HeurCoreset heuristicGrmr(eps, points);
-    heuristicGrmr.construct_graph_2d(t2);
-    heuristicGrmr.G.print();
+    HeurCoreset heurCoreset(points);
+    heurCoreset.construct_graph_2d(t2);
+    heurCoreset.G.print();
 
     return 0;
 }

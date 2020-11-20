@@ -8,7 +8,7 @@
 
 using namespace std;
 
-int main(int argc, char *argv[]) {
+int main() {
 
     string dataset_path = "../examples/example.txt";
 
@@ -21,34 +21,34 @@ int main(int argc, char *argv[]) {
 
     cout << "eps=" << eps << endl;
 
-    OptimalCoreset exactGrmr(eps, points);
-    exactGrmr.sort_counter_clockwise(time[0]);
+    OptimalCoreset optimalCoreset(eps, points);
+    optimalCoreset.sort_counter_clockwise(time[0]);
 
     for (int i = 0; i < 50; ++i) {
-        cout << i << ":" << exactGrmr.points[i].x << "," << exactGrmr.points[i].y << endl;
+        cout << i << ":" << optimalCoreset.points[i].x << "," << optimalCoreset.points[i].y << endl;
     }
     cout << endl;
 
-    exactGrmr.compute_convex_hull(time[1]);
+    optimalCoreset.compute_convex_hull(time[1]);
 
-    for (int it : exactGrmr.convex_hull) {
+    for (int it : optimalCoreset.convex_hull) {
         cout << it << endl;
     }
     cout << endl;
 
-    exactGrmr.select_candidates(time[2]);
+    optimalCoreset.select_candidates(time[2]);
 
-    for (int it : exactGrmr.candidates) {
+    for (int it : optimalCoreset.candidates) {
         cout << it << endl;
     }
     cout << endl;
 
-    exactGrmr.construct_graph(time[3]);
+    optimalCoreset.construct_graph(time[3]);
 
-    exactGrmr.G.print();
+    optimalCoreset.G.print();
     cout << endl;
 
-    vector<int> result_idx = exactGrmr.compute_result(time[4]);
+    vector<int> result_idx = optimalCoreset.compute_result(time[4]);
 
     for (int it : result_idx) {
         cout << it << endl;
