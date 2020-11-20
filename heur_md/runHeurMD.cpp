@@ -51,10 +51,10 @@ int main(int argc, char *argv[]) {
         double query_time = 0.0;
         int size = -1;
 
-        double factors[6] = {4.0, 3.0, 2.5, 2.0, 1.5, 1.0};
+        double factors[5] = {4.0, 2.5, 2.0, 1.5, 1.0};
 
         int round = 0;
-        while (round < 6) {
+        while (round < 5) {
             double delta = factors[round] * eps;
             cout << "delta=" << delta << endl;
             vector<int> result_idx = heurMD.compute_result(delta, time);
