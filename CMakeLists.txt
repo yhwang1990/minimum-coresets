@@ -3,7 +3,7 @@ project(minimum-coresets)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories(graph opt_2d heur_md utils)
+include_directories(graph approx_md opt_2d heur_md utils)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/module_path")
 
@@ -14,23 +14,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 add_executable(approx
         approx_md/runApproxMD.cpp
         utils/IOUtil.hpp
-        utils/Point2D.hpp
-        utils/Validation.hpp)
+        utils/Point.hpp
+        utils/SetCover.hpp)
 
 add_executable(opt
         graph/Digraph.hpp
         opt_2d/OptimalCoreset.cpp
         opt_2d/OptimalCoreset.h
         opt_2d/runOpt2D.cpp
-        utils/IOUtil.hpp
-        utils/Point2D.hpp
-        utils/Validation.hpp)
-
-add_executable(opt_loss
-        graph/Digraph.hpp
-        opt_2d/OptimalCoreset.cpp
-        opt_2d/OptimalCoreset.h
-        opt_2d/runOpt2DLoss.cpp
         utils/IOUtil.hpp
         utils/Point2D.hpp
         utils/Validation.hpp)
@@ -55,17 +46,6 @@ add_executable(heur
         utils/SetCover.hpp
         utils/Validation.hpp)
 
-add_executable(heur_loss
-        graph/DelaunayGraph.hpp
-        graph/DominanceGraph.hpp
-        heur_md/HeurCoreset.h
-        heur_md/HeurCoreset.cpp
-        heur_md/runHeurMDLoss.cpp
-        utils/IOUtil.hpp
-        utils/Point.hpp
-        utils/SetCover.hpp
-        utils/Validation.hpp)
-
 add_executable(example_md
         graph/DelaunayGraph.hpp
         graph/DominanceGraph.hpp
@@ -79,5 +59,4 @@ add_executable(example_md
 
 target_link_libraries(approx PUBLIC ann)
 target_link_libraries(heur PUBLIC glpk)
-target_link_libraries(heur_loss PUBLIC glpk)
 target_link_libraries(example_md PUBLIC glpk)
