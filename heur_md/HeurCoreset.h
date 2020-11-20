@@ -1,5 +1,5 @@
-#ifndef HEURISTIC_GRMR_H
-#define HEURISTIC_GRMR_H
+#ifndef HEURISTIC_CORESET_H
+#define HEURISTIC_CORESET_H
 
 #include <vector>
 
@@ -26,6 +26,10 @@ public:
 
     void construct_graph_2d(double &time);
 
+    void write_G(const char *filename) const;
+
+    void read_G(const char *filename);
+
     vector<int> compute_result(double delta, double &time);
 
     double edge_weight(int i, int j);
@@ -33,4 +37,4 @@ public:
     double edge_weight_2d(int i, int j);
 };
 
-#endif // HEURISTIC_GRMR_H
+#endif // HEURISTIC_CORESET_H

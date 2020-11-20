@@ -6,6 +6,7 @@
 #include <fstream>
 #include <set>
 #include <sstream>
+#include <DominanceGraph.hpp>
 
 #include "Point.hpp"
 #include "Point2D.hpp"
@@ -98,6 +99,40 @@ public:
         }
 
         input_file.close();
+    }
+
+    static void write_dominance_graph(const char *filename, const DominanceGraph &G) {
+        ofstream  outputFile(filename);
+
+        for (int i = 0; i < G.adj.size(); ++i) {
+            for (pair<int, double> edge : G.adj[i]) {
+                outputFile << i << " " << edge.first << " " << edge.second << "\n";
+            }
+        }
+
+        outputFile.close();
+    }
+
+    static void read_dominance_graph(const char *filename, DominanceGraph &G) {
+        ifstream  inputFile(filename);
+
+        if (!inputFile.is_open()) {
+            cerr << "cannot open file " << filename << " for reading \n";
+            exit(1);
+        }
+
+        int s, t;
+        double weight;
+        string str;
+        while (getline(inputFile, str)) {
+            stringstream ss(str);
+            ss >> s;
+            ss >> t;
+            ss >> weight;
+            G.add_edge(s, t, weight);
+        }
+
+        inputFile.close();
     }
 };
 

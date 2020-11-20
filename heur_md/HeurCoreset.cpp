@@ -91,6 +91,14 @@ void HeurCoreset::construct_graph_2d(double &time) {
     time = duration.count();
 }
 
+void HeurCoreset::write_G(const char *filename) const {
+    IOUtil::write_dominance_graph(filename, this->G);
+}
+
+void HeurCoreset::read_G(const char *filename) {
+    IOUtil::read_dominance_graph(filename, this->G);
+}
+
 vector<int> HeurCoreset::compute_result(double delta, double &time) {
     auto start = chrono::high_resolution_clock::now();
 

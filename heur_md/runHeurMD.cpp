@@ -25,23 +25,25 @@ int main(int argc, char *argv[]) {
     IOUtil::read_input_points(dirs_path, dim, queries);
     IOUtil::read_validate_results(validation_path, results);
 
-    ofstream output_file;
-    output_file.open(output_path, ofstream::out | ofstream::app);
-
     HeurCoreset heurMD(points);
 
-    double t1 = 0.0, t2 = 0.0, t3 = 0.0;
-
+    double time = 0.0;
     if (mode == 0) {
         if (dim > 2) {
             heurMD.read_IPDG(graph_path);
-            heurMD.construct_graph(t2);
+            heurMD.construct_graph(time);
         } else {
-            heurMD.construct_graph_2d(t2);
+            heurMD.construct_graph_2d(time);
         }
-
+        heurMD.write_G(output_path);
+        cout << dataset_path << "," << (time / 1000.0) << endl;
     } else {
-        output_file << "dataset=" << dataset_path << "\n";
+        heurMD.read_G(graph_path);
+
+        ofstream output_file;
+        output_file.open(output_path, ofstream::out | ofstream::app);
+
+        output_file << "dataset=" << dataset_path << " eps=" << eps << "\n";
         output_file.flush();
 
         cout << "eps=" << eps << endl;
@@ -49,42 +51,33 @@ int main(int argc, char *argv[]) {
         double query_time = 0.0;
         int size = -1;
 
-            double delta_min = eps, delta_max = 1.0 - heuristicGrmr.MIN_WEIGHT;
-            double delta = min(2 * delta_min, delta_max);
+        double factors[6] = {4.0, 3.0, 2.5, 2.0, 1.5, 1.0};
 
-            while (true) {
-                cout << "delta=" << delta << endl;
-                vector<int> result_idx = heuristicGrmr.compute_result(delta, t3);
-                query_time += t3;
+        int round = 0;
+        while (round < 6) {
+            double delta = factors[round] * eps;
+            cout << "delta=" << delta << endl;
+            vector<int> result_idx = heurMD.compute_result(delta, time);
+            query_time += time;
 
-                vector<Point> coreset;
-                coreset.reserve(result_idx.size());
-                for (int idx : result_idx)
-                    coreset.push_back(heuristicGrmr.extremes[idx]);
-                bool is_valid = Validation::validate(eps, coreset, queries, results);
+            vector<Point> coreset;
+            coreset.reserve(result_idx.size());
+            for (int idx : result_idx)
+                coreset.push_back(heurMD.extremes[idx]);
+            bool is_valid = Validation::validate(eps, coreset, queries, results);
 
-                if (is_valid && size > 0 && delta_max - delta_min < 0.0005)
-                    break;
-
-                if (is_valid && size == coreset.size())
-                    break;
-
-                if (!is_valid || size < coreset.size()) {
-                    delta_max = delta;
-                    delta = (delta_min + delta_max) / 2.0;
-                } else if (size < 0 || size > coreset.size()) {
-                    delta_min = delta;
-                    delta = min(2 * delta_min, (delta_min + delta_max) / 2.0);
-                    size = coreset.size();
-                }
+            if (is_valid) {
+                size = coreset.size();
+                break;
             }
 
-            output_file << "eps=" << eps << " time=" << (t1 + t2 + query_time) / 1000.0
-                        << " build-graph=" << (t1 + t2) / 1000.0 << " query=" << query_time / 1000.0
-                        << " size=" << size << "\n";
-            output_file.flush();
+            round++;
+        }
+
+        output_file << " time=" << (query_time / 1000.0) << " size=" << size << "\n";
+        output_file.flush();
+        output_file.close();
     }
-    output_file.close();
 
     return 0;
 }
