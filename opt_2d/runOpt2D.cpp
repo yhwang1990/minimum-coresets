@@ -9,6 +9,12 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
+    if (argc != 3) {
+        cerr << "usage: ./opt <dataset_path> <output_path>" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+
     char *dataset_path = argv[1];
     char *output_path = argv[2];
 
