@@ -182,9 +182,10 @@ vector<int> OptimalCoreset::compute_result(double &time) {
             min_length = cycle.size();
             min_cycle = cycle;
         }
-        if (min_length <= 4)
+        if (min_length <= 3)
             break;
     }
+
     auto stop = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
     time = duration.count();
