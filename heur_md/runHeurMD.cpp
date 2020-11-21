@@ -28,10 +28,8 @@ int main(int argc, char *argv[]) {
         char *output_path = argv[5];
 
         vector<Point> points;
-
-        HeurCoreset heurMD(points);
-
         IOUtil::read_input_points(dataset_path, dim, points);
+        HeurCoreset heurMD(points);
 
         if (dim > 2) {
             heurMD.read_IPDG(graph_path);
@@ -39,8 +37,10 @@ int main(int argc, char *argv[]) {
         } else {
             heurMD.construct_graph_2d(time);
         }
+
         heurMD.write_G(output_path);
         cout << dataset_path << "," << (time / 1000.0) << endl;
+
     } else {
         int dim = stoi(argv[2]);
         double eps = stod(argv[3]);
@@ -59,7 +59,6 @@ int main(int argc, char *argv[]) {
         IOUtil::read_validate_results(validation_path, results);
 
         HeurCoreset heurMD(points);
-
         heurMD.read_G(graph_path);
 
         ofstream output_file;
