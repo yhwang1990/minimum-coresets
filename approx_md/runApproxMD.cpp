@@ -128,12 +128,10 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
             for (int idx = 0; idx < 100; idx++) {
                 if (approxIdx[idx] != ANN_NULL_IDX) {
                     resultIdxs.insert(approxIdx[idx]);
-                    cout << approxIdx[idx] << " ";
                 } else {
                     break;
                 }
             }
-            cout << endl;
 
             for (int pIdx : resultIdxs)
                 setSystem[pIdx].insert(uIdx);
