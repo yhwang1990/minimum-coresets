@@ -152,6 +152,15 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
             ss = 2 * ss;
     }
 
+    delete [] dataPts;
+    delete [] firstIdx;
+    delete [] firstDist;
+    delete [] approxIdx;
+    delete [] approxDist;
+
+    delete kdTree;
+    annClose();
+
     return coresetIdxs;
 }
 
@@ -182,13 +191,15 @@ int main(int argc, char **argv) {
     output_file << "dataset=" << argv[3] << " eps=" << eps << "\n" << flush;
     output_file.flush();
 
-    double time = 0;
-    vector<int> coresetIdxs = approx_coreset(points, eps, time);
+    for (int iter = 0; iter < 5; iter++) {
+        double time = 0;
+        vector<int> coresetIdxs = approx_coreset(points, eps, time);
 
-    int size = coresetIdxs.size();
-    time = (double) time / 1000.0;
+        int size = coresetIdxs.size();
+        time = (double) time / 1000.0;
 
-    output_file  << "time=" << time << " size=" << size << "\n" << flush;
+        output_file << "iter=" << iter << " time=" << time << " size=" << size << "\n" << flush;
+    }
 
     output_file << "\n" << flush;
     output_file.close();
