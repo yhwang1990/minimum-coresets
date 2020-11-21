@@ -71,8 +71,12 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
 
     ANNpointArray dataPts;
     ANNpoint queryPt;
+
     ANNidxArray firstIdx;
     ANNdistArray firstDist;
+
+    ANNidxArray approxIdx;
+    ANNdistArray approxDist;
     ANNkd_tree *kdTree;
 
     queryPt = annAllocPt(dim + 1);
@@ -80,6 +84,9 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
 
     firstIdx = new ANNidx[1];
     firstDist = new ANNdist[1];
+
+    approxIdx = new ANNidx[100];
+    approxDist = new ANNdist[100];
 
     for (int i = 0; i < n; ++i) {
         double sum = 0.0;
@@ -116,18 +123,17 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
 
             ANNdist sqRad = dim + 1.0 - 2.0 * (1 - epsilon / 2.0) * inner_product(dim, queryPt, dataPts[firstIdx[0]]);
 
-            auto approxIdx = new ANNidx[n];
-            auto approxDist = new ANNdist[n];
+            kdTree->annkFRSearch(queryPt, sqRad, 100, approxIdx, approxDist);
 
-            kdTree->annkFRSearch(queryPt, sqRad, n, approxIdx, approxDist);
-
-            for (int idx = 0; idx < n; idx++) {
+            for (int idx = 0; idx < 100; idx++) {
                 if (approxIdx[idx] != ANN_NULL_IDX) {
                     resultIdxs.insert(approxIdx[idx]);
+                    cout << approxIdx[idx] << " ";
                 } else {
                     break;
                 }
             }
+            cout << endl;
 
             for (int pIdx : resultIdxs)
                 setSystem[pIdx].insert(uIdx);
@@ -178,20 +184,13 @@ int main(int argc, char **argv) {
     output_file << "dataset=" << argv[3] << " eps=" << eps << "\n" << flush;
     output_file.flush();
 
-    double totalTime = 0.0;
-    for (int iter = 0; iter < 10; ++iter) {
-        double time = 0;
-        vector<int> coresetIdxs = approx_coreset(points, eps, time);
+    double time = 0;
+    vector<int> coresetIdxs = approx_coreset(points, eps, time);
 
-        int size = coresetIdxs.size();
-        time = (double) time / 1000.0;
+    int size = coresetIdxs.size();
+    time = (double) time / 1000.0;
 
-        output_file << "iter=" << iter << " time=" << time << " size=" << size << "\n" << flush;
-
-        totalTime += time;
-        if (totalTime > 3.6e7)
-            break;
-    }
+    output_file  << "time=" << time << " size=" << size << "\n" << flush;
 
     output_file << "\n" << flush;
     output_file.close();
