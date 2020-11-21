@@ -152,6 +152,11 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
 }
 
 int main(int argc, char **argv) {
+    if (argc != 7) {
+        cerr << "usage: ./approx <dim> <eps> <dataset_path> <dirs_path> <validation_path> <output_path>" << endl;
+        exit(EXIT_FAILURE);
+    }
+
     int dim = stoi(argv[1]);
     double eps = stod(argv[2]);
     char *dataset_path = argv[3];
@@ -173,13 +178,20 @@ int main(int argc, char **argv) {
     output_file << "dataset=" << argv[3] << " eps=" << eps << "\n" << flush;
     output_file.flush();
 
-    double time = 0;
-    vector<int> coresetIdxs = approx_coreset(points, eps, time);
+    double totalTime = 0.0;
+    for (int iter = 0; iter < 10; ++iter) {
+        double time = 0;
+        vector<int> coresetIdxs = approx_coreset(points, eps, time);
 
-    int size = coresetIdxs.size();
-    time = (double) time / 1000.0;
+        int size = coresetIdxs.size();
+        time = (double) time / 1000.0;
 
-    output_file << "time=" << time << " size=" << size << "\n" << flush;
+        output_file << "iter=" << iter << " time=" << time << " size=" << size << "\n" << flush;
+
+        totalTime += time;
+        if (totalTime > 3.6e7)
+            break;
+    }
 
     output_file << "\n" << flush;
     output_file.close();
