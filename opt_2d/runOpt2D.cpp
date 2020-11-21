@@ -14,7 +14,6 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-
     char *dataset_path = argv[1];
     char *output_path = argv[2];
 
@@ -46,8 +45,8 @@ int main(int argc, char *argv[]) {
             total_time += time[i];
 
         output_file << "eps=" << eps << " size=" << result_idx.size();
-        output_file << " time=" << total_time / 1000.0 << " sc_time=" << time[2] / 1000.0
-                    << " cg_time=" << time[3] / 1000.0 << " result_time=" << time[4] / 1000.0 << "\n" << flush;
+        output_file << " time=" << total_time / 1000.0 << " sc_time=" << time[2] / 1000.0 << " cg_time="
+                    << time[3] / 1000.0 << " result_time=" << time[4] / 1000.0 << "\n" << flush;
     }
 
     output_file.close();
