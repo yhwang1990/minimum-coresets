@@ -68,6 +68,7 @@ bool validate(const vector<Point> &points, vector<int> &idx, double epsilon) {
 vector<int> approx_coreset(const vector<Point> &points, const double epsilon, double &time) {
     int dim = points[0].get_dimension();
     int n = points.size();
+    int kMax = 50;
 
     ANNpointArray dataPts;
     ANNpoint queryPt;
@@ -85,8 +86,8 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
     firstIdx = new ANNidx[1];
     firstDist = new ANNdist[1];
 
-    approxIdx = new ANNidx[100];
-    approxDist = new ANNdist[100];
+    approxIdx = new ANNidx[kMax];
+    approxDist = new ANNdist[kMax];
 
     for (int i = 0; i < n; ++i) {
         double sum = 0.0;
@@ -121,11 +122,11 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
             set<int> resultIdxs;
             resultIdxs.insert(firstIdx[0]);
 
-            ANNdist sqRad = dim + 1.0 - 2.0 * (1 - epsilon / 2.0) * inner_product(dim, queryPt, dataPts[firstIdx[0]]);
+            ANNdist sqRad = dim + 1.0 - 2.0 * (1 - epsilon / 5.0) * inner_product(dim, queryPt, dataPts[firstIdx[0]]);
 
-            kdTree->annkFRSearch(queryPt, sqRad, 100, approxIdx, approxDist);
+            kdTree->annkFRSearch(queryPt, sqRad, kMax, approxIdx, approxDist);
 
-            for (int idx = 0; idx < 100; idx++) {
+            for (int idx = 0; idx < kMax; idx++) {
                 if (approxIdx[idx] != ANN_NULL_IDX) {
                     resultIdxs.insert(approxIdx[idx]);
                 } else {

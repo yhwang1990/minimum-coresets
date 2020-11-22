@@ -24,9 +24,7 @@ done
 for eps in $paramsh; do
     timeout 10h ./build/approx 3 ${eps} ../dataset/RoadNetwork.txt ../dataset/q/q_3d.txt ../dataset/RoadNetwork_valid.txt ../result/approx_RoadNetwork.txt
     timeout 10h ./build/approx 6 ${eps} ../dataset/AirQuality.txt ../dataset/q/q_6d.txt ../dataset/AirQuality_valid.txt ../result/approx_AirQuality.txt
-    timeout 10h ./build/approx 9 ${eps} ../dataset/Color.txt ../dataset/q/q_9d.txt ../dataset/Color_valid.txt ../result/approx_Color.txt
     timeout 10h ./build/approx 6 ${eps} ../dataset/normal/normal_6d.txt ../dataset/q/q_6d.txt ../dataset/normal/normal_6d_valid.txt ../result/approx_normal_6d.txt
-    timeout 10h ./build/approx 6 ${eps} ../dataset/uniform/uniform_6d.txt ../dataset/q/q_6d.txt ../dataset/uniform/uniform_6d_valid.txt ../result/approx_uniform_6d.txt
 done
 
 for size in $sizes; do
@@ -37,4 +35,9 @@ done
 for d in $dims; do
     timeout 10h ./build/approx ${d} 0.1 ../dataset/normal/normal_${d}d.txt ../dataset/q/q_${d}d.txt ../dataset/normal/normal_${d}d_valid.txt ../result/approx_normal_${d}d.txt
     timeout 10h ./build/approx ${d} 0.1 ../dataset/uniform/uniform_${d}d.txt ../dataset/q/q_${d}d.txt ../dataset/uniform/uniform_${d}d_valid.txt ../result/approx_uniform_${d}d.txt
+done
+
+for eps in $paramsh; do
+    timeout 10h ./build/approx 9 ${eps} ../dataset/Color.txt ../dataset/q/q_9d.txt ../dataset/Color_valid.txt ../result/approx_Color.txt
+    timeout 10h ./build/approx 6 ${eps} ../dataset/uniform/uniform_6d.txt ../dataset/q/q_6d.txt ../dataset/uniform/uniform_6d_valid.txt ../result/approx_uniform_6d.txt
 done
