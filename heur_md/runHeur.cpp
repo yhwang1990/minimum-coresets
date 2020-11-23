@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
         double query_time = 0.0;
         int size;
 
-        double factor = 3.0;
+        double factor = 2.5;
         while (true) {
             double delta = factor * eps;
             cout << "delta=" << delta << endl;
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
                 size = coreset.size();
                 break;
             }
-            factor -= 0.1;
+            factor -= 0.25;
         }
 
         output_file << " time=" << (query_time / 1000.0) << " size=" << size << "\n";
