@@ -8,6 +8,7 @@
 #include "Point.hpp"
 #include "IOUtil.hpp"
 #include "SetCover.hpp"
+#include "Validation.hpp"
 
 using namespace std;
 
@@ -65,7 +66,7 @@ bool validate(const vector<Point> &points, vector<int> &idx, double epsilon) {
     return true;
 }
 
-vector<int> approx_coreset(const vector<Point> &points, const double epsilon, double &time) {
+vector<int> approx_coreset(const vector<Point> &points, const int r, const double epsilon, bool &isValid) {
     int dim = points[0].get_dimension();
     int n = points.size();
     int kMax = 50;
@@ -111,10 +112,8 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
         setSystem.push_back(setI);
     }
 
-    bool isValid = false;
-    while (!isValid) {
-        clock_t clockS = clock();
-
+    bool b = false;
+    while (!b) {
         for (int i = 0; i < ss; i++) {
             get_rand_dir(dim, queryPt);
             kdTree->annkSearch(queryPt, 1, firstIdx, firstDist, 0);
@@ -139,18 +138,23 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
 
             ++uIdx;
         }
-
         SetCover::get_min_cover_greedy(uIdx, setSystem, coresetIdxs);
+        b = validate(points, coresetIdxs, epsilon);
 
-        clock_t clockE = clock();
-        time += (double) (clockE - clockS);
-
-        isValid = validate(points, coresetIdxs, epsilon);
-
-        cout << uIdx << "," << coresetIdxs.size() << "," << isValid << endl;
+        cout << uIdx << "," << coresetIdxs.size() << "," << b << endl;
 
         if (ss < 1000000)
             ss = 2 * ss;
+
+        if (b && coresetIdxs.size() <= r) {
+            isValid = true;
+            break;
+        }
+
+        if (coresetIdxs.size() > r) {
+            isValid = false;
+            break;
+        }
     }
 
     delete [] dataPts;
@@ -167,12 +171,12 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
 
 int main(int argc, char **argv) {
     if (argc != 7) {
-        cerr << "usage: ./approx <dim> <eps> <dataset_path> <dirs_path> <validation_path> <output_path>" << endl;
+        cerr << "usage: ./approx <dim> <r> <dataset_path> <dirs_path> <validation_path> <output_path>" << endl;
         exit(EXIT_FAILURE);
     }
 
     int dim = stoi(argv[1]);
-    double eps = stod(argv[2]);
+    int r = stoi(argv[2]);
     char *dataset_path = argv[3];
     char *dirs_path = argv[4];
     char *validation_path = argv[5];
@@ -189,19 +193,35 @@ int main(int argc, char **argv) {
 
     cout << "approx " << dataset_path << " " << points.size() << " " << dim << endl;
 
-    output_file << "dataset=" << argv[3] << " eps=" << eps << "\n" << flush;
+    output_file << "dataset=" << argv[3] << " r=" << r << "\n" << flush;
     output_file.flush();
 
-    for (int iter = 0; iter < 5; iter++) {
-        double time = 0;
-        vector<int> coresetIdxs = approx_coreset(points, eps, time);
-
-        int size = coresetIdxs.size();
-        time = (double) time / 1000.0;
-
-        output_file << "iter=" << iter << " time=" << time << " size=" << size << "\n" << flush;
+    double eps = 0.2;
+    vector<int> coresetIdxs;
+    bool isValid;
+    while (true) {
+        cout << eps << endl;
+        coresetIdxs = approx_coreset(points, r, eps, isValid);
+        if (isValid) {
+            break;
+        } else {
+            eps += 0.01;
+        }
     }
 
-    output_file << "\n" << flush;
+    vector<Point> coreset;
+    vector<double> regretDist;
+    coreset.reserve(coresetIdxs.size());
+    for (int idx : coresetIdxs)
+        coreset.push_back(points[idx]);
+    Validation::loss_distribution(coreset, queries, results, regretDist);
+
+    cout << regretDist[99] << endl;
+
+    for (int i = 0; i < 100; ++i)
+        output_file << regretDist[i] << "\n";
+    output_file.flush();
     output_file.close();
+
+    return EXIT_SUCCESS;
 }
