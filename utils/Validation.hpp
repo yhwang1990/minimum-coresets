@@ -117,8 +117,7 @@ public:
 
     static void loss_distribution(const vector<Point> &points, const vector<Point> &queries,
                                   const vector<double> &results, vector<double> &regret_dist) {
-        assert(queries.size() <= results.size());
-        int n = queries.size();
+        int n = min(queries.size(), results.size());
         regret_dist.reserve(100);
 
         vector<double> regret_ratios(n);
@@ -136,6 +135,8 @@ public:
         }
 
         sort (regret_ratios.begin(), regret_ratios.end());
+
+        cout << regret_ratios[0] << "," << regret_ratios[n - 1] << endl;
 
         for (int i = 1; i < 100; ++i) {
             regret_dist[i - 1] = regret_ratios[n * i / 100];
