@@ -12,7 +12,13 @@ find_package(GLPK REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
 add_executable(approx
-        approx_md/runApproxMD.cpp
+        approx_md/runApprox.cpp
+        utils/IOUtil.hpp
+        utils/Point.hpp
+        utils/SetCover.hpp)
+
+add_executable(approx-r
+        approx_md/runApproxFixedSize.cpp
         utils/IOUtil.hpp
         utils/Point.hpp
         utils/SetCover.hpp)
@@ -21,7 +27,7 @@ add_executable(opt
         graph/Digraph.hpp
         opt_2d/OptimalCoreset.cpp
         opt_2d/OptimalCoreset.h
-        opt_2d/runOpt2D.cpp
+        opt_2d/runOpt.cpp
         utils/IOUtil.hpp
         utils/Point2D.hpp
         utils/Validation.hpp)
@@ -30,16 +36,7 @@ add_executable(opt-r
         graph/Digraph.hpp
         opt_2d/OptimalCoreset.cpp
         opt_2d/OptimalCoreset.h
-        opt_2d/runOpt2DFixSize.cpp
-        utils/IOUtil.hpp
-        utils/Point2D.hpp
-        utils/Validation.hpp)
-
-add_executable(example_2d
-        graph/Digraph.hpp
-        opt_2d/OptimalCoreset.cpp
-        opt_2d/OptimalCoreset.h
-        opt_2d/runExample2D.cpp
+        opt_2d/runOptFixSize.cpp
         utils/IOUtil.hpp
         utils/Point2D.hpp
         utils/Validation.hpp)
@@ -49,23 +46,12 @@ add_executable(heur
         graph/DominanceGraph.hpp
         heur_md/HeurCoreset.h
         heur_md/HeurCoreset.cpp
-        heur_md/runHeurMD.cpp
-        utils/IOUtil.hpp
-        utils/Point.hpp
-        utils/SetCover.hpp
-        utils/Validation.hpp)
-
-add_executable(example_md
-        graph/DelaunayGraph.hpp
-        graph/DominanceGraph.hpp
-        heur_md/HeurCoreset.h
-        heur_md/HeurCoreset.cpp
-        heur_md/runExampleMD.cpp
+        heur_md/runHeur.cpp
         utils/IOUtil.hpp
         utils/Point.hpp
         utils/SetCover.hpp
         utils/Validation.hpp)
 
 target_link_libraries(approx PUBLIC ann)
+target_link_libraries(approx-r PUBLIC ann)
 target_link_libraries(heur PUBLIC glpk)
-target_link_libraries(example_md PUBLIC glpk)
