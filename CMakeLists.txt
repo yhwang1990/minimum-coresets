@@ -52,6 +52,18 @@ add_executable(heur
         utils/SetCover.hpp
         utils/Validation.hpp)
 
+add_executable(heur-r
+        graph/DelaunayGraph.hpp
+        graph/DominanceGraph.hpp
+        heur_md/HeurCoreset.h
+        heur_md/HeurCoreset.cpp
+        heur_md/runHeurFixedSize.cpp
+        utils/IOUtil.hpp
+        utils/Point.hpp
+        utils/SetCover.hpp
+        utils/Validation.hpp)
+
 target_link_libraries(approx PUBLIC ann)
 target_link_libraries(approx-r PUBLIC ann)
 target_link_libraries(heur PUBLIC glpk)
+target_link_libraries(heur-r PUBLIC glpk)
