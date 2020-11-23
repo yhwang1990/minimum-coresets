@@ -72,6 +72,8 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    cout << coreset.size() << endl;
+
     vector<double> regret_dist;
     Validation::loss_distribution(coreset, queries, results, regret_dist);
 
