@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 
     output_file << "dataset=" << dataset_path << " r=" << r;
     output_file.flush();
-    
+
     double deltaMin = 0, deltaMax = 1, delta = (deltaMin + deltaMax) / 2.0;
     vector<int> result_idx;
     while (true) {

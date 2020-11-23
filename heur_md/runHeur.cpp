@@ -70,13 +70,11 @@ int main(int argc, char *argv[]) {
         cout << "eps=" << eps << endl;
 
         double query_time = 0.0;
-        int size = -1;
+        int size;
 
-        double factors[5] = {4.0, 2.5, 2.0, 1.5, 1.0};
-
-        int round = 0;
-        while (round < 5) {
-            double delta = factors[round] * eps;
+        double factor = 3.0;
+        while (true) {
+            double delta = factor * eps;
             cout << "delta=" << delta << endl;
             vector<int> result_idx = heurMD.compute_result(delta, time);
             query_time += time;
@@ -91,7 +89,7 @@ int main(int argc, char *argv[]) {
                 size = coreset.size();
                 break;
             }
-            round++;
+            factor -= 0.1;
         }
 
         output_file << " time=" << (query_time / 1000.0) << " size=" << size << "\n";
