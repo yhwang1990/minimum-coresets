@@ -26,6 +26,15 @@ add_executable(opt
         utils/Point2D.hpp
         utils/Validation.hpp)
 
+add_executable(opt-r
+        graph/Digraph.hpp
+        opt_2d/OptimalCoreset.cpp
+        opt_2d/OptimalCoreset.h
+        opt_2d/runOpt2DFixSize.cpp
+        utils/IOUtil.hpp
+        utils/Point2D.hpp
+        utils/Validation.hpp)
+
 add_executable(example_2d
         graph/Digraph.hpp
         opt_2d/OptimalCoreset.cpp
