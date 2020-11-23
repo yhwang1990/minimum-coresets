@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
         opt_2d.sort_counter_clockwise(time[0]);
         opt_2d.compute_convex_hull(time[1]);
         opt_2d.select_candidates(time[2]);
-        opt_2d.construct_graph(time[3]);
+        opt_2d.fast_construct_graph(time[3]);
 
         result_idx = opt_2d.compute_result(time[4]);
 
@@ -79,8 +79,8 @@ int main(int argc, char *argv[]) {
 
     cout << regret_dist[99] << endl;
 
-    for (int regret : regret_dist)
-        output_file << regret << "\n";
+    for (int i = 0; i < 100; ++i)
+        output_file << regret_dist[i] << "\n";
     output_file.flush();
     output_file.close();
 
