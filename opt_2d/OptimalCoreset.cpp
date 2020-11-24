@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <chrono>
+#include <random>
 
 #include "OptimalCoreset.h"
 
@@ -45,6 +46,53 @@ void OptimalCoreset::compute_convex_hull(double &time) {
     auto stop = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
     time = duration.count();
+}
+
+void OptimalCoreset::compute_convex_hull2(double &time) {
+    default_random_engine generator(0);
+    normal_distribution<double> distribution(0.0, 1.0);
+
+    bool moreDirs = true;
+
+    int nDirs = 65536;
+    int sumDirs = 0;
+
+    while (moreDirs) {
+        int prevSize = convex_hull.size();
+
+        for (int q = 0; q < nDirs; ++q) {
+            double len = 0, x, y;
+            x = distribution(generator);
+            len += (x * x);
+            y = distribution(generator);
+            len += (y * y);
+            len = sqrt(len);
+            x = x / len;
+            y = y / len;
+            Point2D query(x, y);
+
+            int maxIdx = -1;
+            double maxVal = 0.0;
+            for (int pIdx = 0; pIdx < points.size(); ++pIdx) {
+                double val_i = points[pIdx].dotP(query);
+                if (val_i > maxVal) {
+                    maxIdx = pIdx;
+                    maxVal = val_i;
+                }
+            }
+            convex_hull.insert(maxIdx);
+        }
+
+        int afterSize = convex_hull.size();
+
+        if (afterSize == prevSize)
+            moreDirs = false;
+
+        sumDirs += nDirs;
+        nDirs *= 2;
+
+        cout << sumDirs << "," << convex_hull.size() << "\n";
+    }
 }
 
 void OptimalCoreset::select_candidates(double &time) {

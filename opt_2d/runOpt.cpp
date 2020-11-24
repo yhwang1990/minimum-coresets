@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <cstring>
 
 #include "IOUtil.hpp"
 #include "Point2D.hpp"
@@ -43,9 +44,20 @@ int main(int argc, char *argv[]) {
 
             OptimalCoreset opt_2d(eps, points);
             opt_2d.sort_counter_clockwise(time[0]);
-            opt_2d.compute_convex_hull(time[1]);
+
+            if (strstr(dataset_path, "FourSquare") != nullptr) {
+                opt_2d.compute_convex_hull2(time[1]);
+            } else {
+                opt_2d.compute_convex_hull(time[1]);
+            }
+
             opt_2d.select_candidates(time[2]);
-            opt_2d.construct_graph(time[3]);
+
+            if (strstr(dataset_path, "FourSquare") != nullptr) {
+                opt_2d.fast_construct_graph(time[3]);
+            } else {
+                opt_2d.construct_graph(time[3]);
+            }
 
             vector<int> result_idx = opt_2d.compute_result(time[4]);
 

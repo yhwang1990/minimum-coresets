@@ -24,6 +24,8 @@ public:
 
     void compute_convex_hull(double &time);
 
+    void compute_convex_hull2(double &time);
+
     void select_candidates(double &time);
 
     void construct_graph(double &time);
