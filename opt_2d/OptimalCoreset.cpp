@@ -134,10 +134,11 @@ void OptimalCoreset::fast_construct_graph(double &time) {
 vector<int> OptimalCoreset::compute_result(double &time) {
     auto start = chrono::high_resolution_clock::now();
 
-    int pivot = *(convex_hull.begin());
     vector<pair<int, int>> pairs;
-    for (int idx : G.adj[pivot]) {
-        pairs.emplace_back(pivot, idx);
+    for (int pivot : convex_hull) {
+        for (int idx : G.adj[pivot]) {
+            pairs.emplace_back(pivot, idx);
+        }
     }
 
     int min_length = INT_MAX;
