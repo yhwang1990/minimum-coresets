@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
 
             opt_2d.select_candidates(time[2]);
 
-            if (strstr(dataset_path, "FourSquare") != nullptr) {
+            if (strstr(dataset_path, "normal") == nullptr) {
                 opt_2d.fast_construct_graph(time[3]);
             } else {
                 opt_2d.construct_graph(time[3]);
