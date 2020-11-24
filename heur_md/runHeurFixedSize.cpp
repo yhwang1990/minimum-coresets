@@ -15,14 +15,14 @@ int main(int argc, char *argv[]) {
 
     double time = 0.0;
 
-    int dim = stoi(argv[2]);
-    int r = stoi(argv[3]);
+    int dim = stoi(argv[1]);
+    int r = stoi(argv[2]);
 
-    char *dataset_path = argv[4];
-    char *graph_path = argv[5];
-    char *dirs_path = argv[6];
-    char *validation_path = argv[7];
-    char *output_path = argv[8];
+    char *dataset_path = argv[3];
+    char *graph_path = argv[4];
+    char *dirs_path = argv[5];
+    char *validation_path = argv[6];
+    char *output_path = argv[7];
 
     vector<Point> points, queries;
     vector<double> results;
@@ -46,6 +46,10 @@ int main(int argc, char *argv[]) {
         result_idx = heurMD.compute_result(delta, time);
 
         cout << "delta=" << delta << " size=" << result_idx.size() << endl;
+
+        if (abs(deltaMax - deltaMin) < 1.0e-6) {
+            break;
+        }
 
         if (result_idx.size() > r) {
             deltaMin = delta;
