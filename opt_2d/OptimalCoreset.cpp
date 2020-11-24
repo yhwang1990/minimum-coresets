@@ -152,46 +152,74 @@ vector<int> OptimalCoreset::compute_result(double &time) {
             break;
     }
 
-    if (min_length == 3) {
-        auto stop = chrono::high_resolution_clock::now();
-        auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
-        time = duration.count();
-
-        return min_cycle;
-    }
-
-    pairs.clear();
-    for (auto &it : G.adj) {
-        int s = it.first;
-        if (s < pivot) {
-            for (int t : it.second) {
-                if (t > pivot)
-                    pairs.emplace_back(s, t);
-            }
-        } else if (s > pivot) {
-            for (int t : it.second) {
-                if (t < s && t > pivot)
-                    pairs.emplace_back(s, t);
-            }
-        }
-    }
-
-    for (auto &it : pairs) {
-        G.shortest_path(it.second, it.first, cycle);
-        if (cycle.size() < min_length) {
-            min_length = cycle.size();
-            min_cycle = cycle;
-        }
-        if (min_length <= 3)
-            break;
-    }
-
     auto stop = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
     time = duration.count();
 
     return min_cycle;
 }
+
+//vector<int> OptimalCoreset::compute_result(double &time) {
+//    auto start = chrono::high_resolution_clock::now();
+//
+//    int pivot = *(convex_hull.begin());
+//    vector<pair<int, int>> pairs;
+//    for (int idx : G.adj[pivot]) {
+//        pairs.emplace_back(pivot, idx);
+//    }
+//
+//    int min_length = INT_MAX;
+//    vector<int> min_cycle, cycle;
+//    for (auto &it : pairs) {
+//        G.shortest_path(it.second, it.first, cycle);
+//        if (cycle.size() < min_length) {
+//            min_length = cycle.size();
+//            min_cycle = cycle;
+//        }
+//        if (min_length <= 3)
+//            break;
+//    }
+//
+//    if (min_length == 3) {
+//        auto stop = chrono::high_resolution_clock::now();
+//        auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+//        time = duration.count();
+//
+//        return min_cycle;
+//    }
+//
+//    pairs.clear();
+//    for (auto &it : G.adj) {
+//        int s = it.first;
+//        if (s < pivot) {
+//            for (int t : it.second) {
+//                if (t > pivot)
+//                    pairs.emplace_back(s, t);
+//            }
+//        } else if (s > pivot) {
+//            for (int t : it.second) {
+//                if (t < s && t > pivot)
+//                    pairs.emplace_back(s, t);
+//            }
+//        }
+//    }
+//
+//    for (auto &it : pairs) {
+//        G.shortest_path(it.second, it.first, cycle);
+//        if (cycle.size() < min_length) {
+//            min_length = cycle.size();
+//            min_cycle = cycle;
+//        }
+//        if (min_length <= 3)
+//            break;
+//    }
+//
+//    auto stop = chrono::high_resolution_clock::now();
+//    auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+//    time = duration.count();
+//
+//    return min_cycle;
+//}
 
 int OptimalCoreset::orientation(Point2D p, Point2D q, Point2D r) {
     double val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
