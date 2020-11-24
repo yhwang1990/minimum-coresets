@@ -54,7 +54,7 @@ void OptimalCoreset::compute_convex_hull2(double &time) {
 
     bool moreDirs = true;
 
-    int nDirs = 65536;
+    int nDirs = 1024;
     int sumDirs = 0;
 
     while (moreDirs) {
@@ -89,7 +89,6 @@ void OptimalCoreset::compute_convex_hull2(double &time) {
             moreDirs = false;
 
         sumDirs += nDirs;
-        nDirs *= 2;
 
         cout << sumDirs << "," << convex_hull.size() << "\n";
     }
