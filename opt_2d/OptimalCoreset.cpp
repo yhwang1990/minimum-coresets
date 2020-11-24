@@ -54,7 +54,7 @@ void OptimalCoreset::compute_convex_hull2(double &time) {
 
     bool moreDirs = true;
 
-    int nDirs = 1024;
+    int nDirs = 16384;
     int sumDirs = 0;
 
     while (moreDirs) {
