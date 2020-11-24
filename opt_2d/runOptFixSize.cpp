@@ -11,7 +11,7 @@ using namespace std;
 int main(int argc, char *argv[]) {
 
     if (argc != 6) {
-        cerr << "usage: ./opt <r> <dataset_path> <dirs_path> <valid_path> <output_path>" << endl;
+        cerr << "usage: ./opt-r <r> <dataset_path> <dirs_path> <valid_path> <output_path>" << endl;
         exit(EXIT_FAILURE);
     }
 
