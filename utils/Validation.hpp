@@ -34,6 +34,29 @@ public:
         return true;
     }
 
+    static bool validate(const double eps, const vector<Point2D> &points, const vector<Point2D> &queries,
+                         const vector<double> &results) {
+        assert(queries.size() <= results.size());
+        int n = queries.size();
+
+        if (points.empty())
+            return false;
+
+        for (int i = 0; i < n; i++) {
+            assert(results[i] > 0);
+            double dot_max = 0;
+            for (const Point2D &p : points) {
+                double dotp = p.dotP(queries[i]);
+                if (dotp > dot_max)
+                    dot_max = dotp;
+            }
+
+            if (dot_max < (1 - eps) * results[i])
+                return false;
+        }
+        return true;
+    }
+
     static bool validate_eps_kernel(const double eps, const vector<Point> &points, const vector<Point> &queries,
                                     const vector<double> &results) {
         assert(queries.size() <= results.size());

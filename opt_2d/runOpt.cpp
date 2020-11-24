@@ -4,22 +4,28 @@
 #include "IOUtil.hpp"
 #include "Point2D.hpp"
 #include "OptimalCoreset.h"
+#include "Validation.hpp"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
 
-    if (argc != 3) {
-        cerr << "usage: ./opt <dataset_path> <output_path>" << endl;
+    if (argc != 5) {
+        cerr << "usage: ./opt <dataset_path> <dirs_path> <valid_path> <output_path>" << endl;
         exit(EXIT_FAILURE);
     }
 
     char *dataset_path = argv[1];
-    char *output_path = argv[2];
+    char *dirs_path = argv[2];
+    char *valid_path = argv[3];
+    char *output_path = argv[4];
 
-    vector<Point2D> points;
+    vector<Point2D> points, queries;
+    vector<double> results;
 
     IOUtil::read_input_points(dataset_path, points);
+    IOUtil::read_input_points(dirs_path, queries);
+    IOUtil::read_validate_results(valid_path, results);
 
     ofstream output_file;
     output_file.open(output_path, std::ofstream::out | std::ofstream::app);
@@ -39,6 +45,16 @@ int main(int argc, char *argv[]) {
         opt_2d.fast_construct_graph(time[3]);
 
         vector<int> result_idx = opt_2d.compute_result(time[4]);
+
+        vector<Point2D> coreset;
+        coreset.reserve(result_idx.size());
+        for (int idx : result_idx)
+            coreset.push_back(opt_2d.points[idx]);
+        bool is_valid = Validation::validate(eps, coreset, queries, results);
+
+        if (!is_valid) {
+            exit(EXIT_FAILURE);
+        }
 
         double total_time = 0.0;
         for (int i = 2; i < 5; i++)
