@@ -102,7 +102,7 @@ vector<int> approx_coreset(const vector<Point> &points, const int r, const doubl
     kdTree = new ANNkd_tree(dataPts, n, dim + 1);
 
     vector<int> coresetIdxs;
-    int ss = 16;
+    int ss = r;
     int uIdx = 0;
 
     vector<unordered_set<int>> setSystem(n);
@@ -142,9 +142,6 @@ vector<int> approx_coreset(const vector<Point> &points, const int r, const doubl
         b = validate(points, coresetIdxs, epsilon);
 
         cout << uIdx << "," << coresetIdxs.size() << "," << b << endl;
-
-        if (ss < 1000000)
-            ss = 2 * ss;
 
         if (b && coresetIdxs.size() <= r) {
             isValid = true;
