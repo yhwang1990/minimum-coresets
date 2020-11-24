@@ -10,7 +10,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 
-    if (argc != 5) {
+    if (argc != 6) {
         cerr << "usage: ./opt <full> <dataset_path> <dirs_path> <valid_path> <output_path>" << endl;
         exit(EXIT_FAILURE);
     }
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
         output_file << " time=" << total_time / 1000.0 << " sc_time=" << time[2] / 1000.0 << " cg_time="
                     << time[3] / 1000.0 << " result_time=" << time[4] / 1000.0 << "\n" << flush;
     }
-    
+
     output_file.close();
 
     return 0;
