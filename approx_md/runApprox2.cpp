@@ -211,15 +211,13 @@ int main(int argc, char **argv) {
     output_file << "dataset=" << argv[3] << " eps=" << eps << "\n" << flush;
     output_file.flush();
 
-    for (int iter = 0; iter < 5; iter++) {
-        double time = 0;
-        vector<int> coresetIdxs = approx_coreset(points, eps, time);
+    double time = 0;
+    vector<int> coresetIdxs = approx_coreset(points, eps, time);
 
-        int size = coresetIdxs.size();
-        time = (double) time / 1000.0;
+    int size = coresetIdxs.size();
+    time = (double) time / 1000.0;
 
-        output_file << "iter=" << iter << " time=" << time << " size=" << size << "\n" << flush;
-    }
+    output_file << "iter=" << 0 << " time=" << time << " size=" << size << "\n" << flush;
 
     output_file << "\n" << flush;
     output_file.close();
