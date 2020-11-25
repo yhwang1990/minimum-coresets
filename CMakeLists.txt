@@ -17,6 +17,12 @@ add_executable(approx
         utils/Point.hpp
         utils/SetCover.hpp)
 
+add_executable(approx2
+        approx_md/runApprox2.cpp
+        utils/IOUtil.hpp
+        utils/Point.hpp
+        utils/SetCover.hpp)
+
 add_executable(approx-r
         approx_md/runApproxFixedSize.cpp
         utils/IOUtil.hpp
@@ -64,6 +70,7 @@ add_executable(heur-r
         utils/Validation.hpp)
 
 target_link_libraries(approx PUBLIC ann)
+target_link_libraries(approx2 PUBLIC ann)
 target_link_libraries(approx-r PUBLIC ann)
 target_link_libraries(heur PUBLIC glpk)
 target_link_libraries(heur-r PUBLIC glpk)
