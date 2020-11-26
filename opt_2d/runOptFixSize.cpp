@@ -77,9 +77,9 @@ int main(int argc, char *argv[]) {
     vector<double> regret_dist;
     Validation::loss_distribution(coreset, queries, results, regret_dist);
 
-    cout << regret_dist[99] << endl;
+    cout << regret_dist[999] << endl;
 
-    for (int i = 0; i < 100; ++i)
+    for (int i = 0; i < 1000; ++i)
         output_file << regret_dist[i] << "\n";
     output_file.flush();
     output_file.close();

@@ -213,9 +213,9 @@ int main(int argc, char **argv) {
         coreset.push_back(points[idx]);
     Validation::loss_distribution(coreset, queries, results, regretDist);
 
-    cout << regretDist[99] << endl;
+    cout << regretDist[999] << endl;
 
-    for (int i = 0; i < 100; ++i)
+    for (int i = 0; i < 1000; ++i)
         output_file << regretDist[i] << "\n";
     output_file.flush();
     output_file.close();

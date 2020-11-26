@@ -141,7 +141,7 @@ public:
     static void loss_distribution(const vector<Point> &points, const vector<Point> &queries,
                                   const vector<double> &results, vector<double> &regret_dist) {
         int n = min(queries.size(), results.size());
-        regret_dist.reserve(100);
+        regret_dist.reserve(1000);
 
         vector<double> regret_ratios(n);
         for (int i = 0; i < n; i++) {
@@ -161,16 +161,16 @@ public:
 
         cout << regret_ratios[0] << "," << regret_ratios[n - 1] << endl;
 
-        for (int i = 1; i < 100; ++i) {
-            regret_dist[i - 1] = regret_ratios[n * i / 100];
+        for (int i = 1; i < 1000; ++i) {
+            regret_dist[i - 1] = regret_ratios[n * i / 1000];
         }
-        regret_dist[99] = regret_ratios[n - 1];
+        regret_dist[999] = regret_ratios[n - 1];
     }
 
     static void loss_distribution(const vector<Point2D> &points, const vector<Point2D> &queries,
                                   const vector<double> &results, vector<double> &regret_dist) {
         int n = min(queries.size(), results.size());
-        regret_dist.reserve(100);
+        regret_dist.reserve(1000);
 
         vector<double> regret_ratios(n);
         for (int i = 0; i < n; i++) {
@@ -190,9 +190,9 @@ public:
 
         cout << regret_ratios[0] << "," << regret_ratios[n - 1] << endl;
 
-        for (int i = 1; i < 100; ++i) {
-            regret_dist[i - 1] = regret_ratios[n * i / 100];
+        for (int i = 1; i < 1000; ++i) {
+            regret_dist[i - 1] = regret_ratios[n * i / 1000];
         }
-        regret_dist[99] = regret_ratios[n - 1];
+        regret_dist[999] = regret_ratios[n - 1];
     }
 };
