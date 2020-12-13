@@ -492,7 +492,7 @@ class DLL_API ANNpointSet {
 public:
 	virtual ~ANNpointSet() {}			// virtual distructor
 
-	virtual void annkSearch(			// approx k near neighbor search
+	virtual void annkSearch(			// approximate k near neighbor search
 		ANNpoint		q,				// query point
 		int				k,				// number of near neighbors to return
 		ANNidxArray		nn_idx,			// nearest neighbor array (modified)
@@ -500,7 +500,7 @@ public:
 		double			eps=0.0			// error bound
 		) = 0;							// pure virtual (defined elsewhere)
 
-	virtual int annkFRSearch(			// approx fixed-radius kNN search
+	virtual int annkFRSearch(			// approximate fixed-radius kNN search
 		ANNpoint		q,				// query point
 		ANNdist			sqRad,			// squared radius
 		int				k = 0,			// number of near neighbors to return
@@ -547,14 +547,14 @@ public:
 
 	~ANNbruteForce();					// destructor
 
-	void annkSearch(					// approx k near neighbor search
+	void annkSearch(					// approximate k near neighbor search
 		ANNpoint		q,				// query point
 		int				k,				// number of near neighbors to return
 		ANNidxArray		nn_idx,			// nearest neighbor array (modified)
 		ANNdistArray	dd,				// dist to near neighbors (modified)
 		double			eps=0.0);		// error bound
 
-	int annkFRSearch(					// approx fixed-radius kNN search
+	int annkFRSearch(					// approximate fixed-radius kNN search
 		ANNpoint		q,				// query point
 		ANNdist			sqRad,			// squared radius
 		int				k = 0,			// number of near neighbors to return
@@ -738,7 +738,7 @@ public:
 
 	~ANNkd_tree();						// tree destructor
 
-	void annkSearch(					// approx k near neighbor search
+	void annkSearch(					// approximate k near neighbor search
 		ANNpoint		q,				// query point
 		int				k,				// number of near neighbors to return
 		ANNidxArray		nn_idx,			// nearest neighbor array (modified)
@@ -752,7 +752,7 @@ public:
 		ANNdistArray	dd,				// dist to near neighbors (modified)
 		double			eps=0.0);		// error bound
 
-	int annkFRSearch(					// approx fixed-radius kNN search
+	int annkFRSearch(					// approximate fixed-radius kNN search
 		ANNpoint		q,				// the query point
 		ANNdist			sqRad,			// squared radius of query ball
 		int				k,				// number of neighbors to return

@@ -168,7 +168,7 @@ vector<int> approx_coreset(const vector<Point> &points, const int r, const doubl
 
 int main(int argc, char **argv) {
     if (argc != 7) {
-        cerr << "usage: ./approx <dim> <r> <dataset_path> <dirs_path> <validation_path> <output_path>" << endl;
+        cerr << "usage: ./approximate <dim> <r> <dataset_path> <dirs_path> <validation_path> <output_path>" << endl;
         exit(EXIT_FAILURE);
     }
 
@@ -188,7 +188,7 @@ int main(int argc, char **argv) {
     ofstream output_file;
     output_file.open(output_path, std::ofstream::out | std::ofstream::app);
 
-    cout << "approx " << dataset_path << " " << points.size() << " " << dim << endl;
+    cout << "approximate " << dataset_path << " " << points.size() << " " << dim << endl;
 
     output_file << "dataset=" << argv[3] << " r=" << r << "\n" << flush;
     output_file.flush();

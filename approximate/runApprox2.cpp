@@ -31,6 +31,20 @@ void get_rand_dir(int dim, ANNpoint p) {
     p[dim] = 0;
 }
 
+void get_dir(int dim, const Point &q, ANNpoint p) {
+    double len = 0;
+    while (len == 0) {
+        for (int i = 0; i < dim; i++) {
+            p[i] = q.get_coordinate(i);
+            len += (p[i] * p[i]);
+        }
+        len = sqrt(len);
+    }
+    for (int i = 0; i < dim; i++)
+        p[i] = p[i] / len;
+    p[dim] = 0;
+}
+
 double inner_product(int dim, const ANNpoint &p, const ANNpoint &q) {
     double sum = 0;
     for (int i = 0; i < dim; i++) {
@@ -116,7 +130,12 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
         clock_t clockS = clock();
 
         for (int i = 0; i < ss; i++) {
-            get_rand_dir(dim, queryPt);
+            if (uIdx < queries.size()) {
+                get_dir(dim, queries[uIdx], queryPt);
+            } else {
+                get_rand_dir(dim, queryPt);
+            }
+
             kdTree->annkSearch(queryPt, 1, firstIdx, firstDist, 0);
 
             set<int> resultIdxs;
@@ -167,7 +186,7 @@ vector<int> approx_coreset(const vector<Point> &points, const double epsilon, do
 
 int main(int argc, char **argv) {
     if (argc != 7) {
-        cerr << "usage: ./approx <dim> <eps> <dataset_path> <dirs_path> <validation_path> <output_path>" << endl;
+        cerr << "usage: ./approximate <dim> <eps> <dataset_path> <dirs_path> <validation_path> <output_path>" << endl;
         exit(EXIT_FAILURE);
     }
 
@@ -187,20 +206,18 @@ int main(int argc, char **argv) {
     ofstream output_file;
     output_file.open(output_path, std::ofstream::out | std::ofstream::app);
 
-    cout << "approx " << dataset_path << " " << points.size() << " " << dim << endl;
+    cout << "approximate " << dataset_path << " " << points.size() << " " << dim << endl;
 
     output_file << "dataset=" << argv[3] << " eps=" << eps << "\n" << flush;
     output_file.flush();
 
-    for (int iter = 0; iter < 5; iter++) {
-        double time = 0;
-        vector<int> coresetIdxs = approx_coreset(points, eps, time);
+    double time = 0;
+    vector<int> coresetIdxs = approx_coreset(points, eps, time);
 
-        int size = coresetIdxs.size();
-        time = (double) time / 1000.0;
+    int size = coresetIdxs.size();
+    time = (double) time / 1000.0;
 
-        output_file << "iter=" << iter << " time=" << time << " size=" << size << "\n" << flush;
-    }
+    output_file << "iter=" << 0 << " time=" << time << " size=" << size << "\n" << flush;
 
     output_file << "\n" << flush;
     output_file.close();
