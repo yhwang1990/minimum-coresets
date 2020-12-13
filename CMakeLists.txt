@@ -11,14 +11,8 @@ find_package(GLPK REQUIRED)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
-add_executable(approximate
+add_executable(approx
         approximate/runApprox.cpp
-        utils/IOUtil.hpp
-        utils/Point.hpp
-        utils/SetCover.hpp)
-
-add_executable(approx2
-        approximate/runApprox2.cpp
         utils/IOUtil.hpp
         utils/Point.hpp
         utils/SetCover.hpp)
@@ -69,8 +63,7 @@ add_executable(heur-r
         utils/SetCover.hpp
         utils/Validation.hpp)
 
-target_link_libraries(approximate PUBLIC ann)
-target_link_libraries(approx2 PUBLIC ann)
+target_link_libraries(approx PUBLIC ann)
 target_link_libraries(approx-r PUBLIC ann)
 target_link_libraries(heur PUBLIC glpk)
 target_link_libraries(heur-r PUBLIC glpk)
