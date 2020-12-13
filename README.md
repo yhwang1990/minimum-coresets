@@ -1,12 +1,13 @@
 # Generalized-RMS
 
-A C++ implementation of algorithms in our paper "GRMR: Generalized Regret-Minimizing Representatives".
+A C++ implementation of algorithms in our paper "Computing Minimum Coresets for Maxima Representation of Multidimensional Data".
 
 ## Dependencies
 
 - Ubuntu: 18.04.3 LTS
 - GCC: 7.4+
 - CMake: 3.5+
+- ANN: 1.1.2
 - GLPK: 4.65
 
 ## How to run
@@ -20,47 +21,53 @@ cmake  ../
 make all
 ```
 
-### Run E-GRMR
+### Run OptMC
 
 ```sh
-./build/ExactGRMR <dataset_path> <output_path>
+./build/opt <is_full> <dataset_path> <dirs_path> <valid_path> <output_path>
+```
+- is_full: 0 or 1, 0 for eps=0.1 and 1 for all eps values
+- dataset_path: string, the file of points in the dataset
+- dirs_path: string, the file of vectors used for validation
+- valid_path: string, the file of precomputed results for validation
+- output_path: string, the file of output results
+
+### Run SCMC
+
+```sh
+./build/approx <dim> <eps> <dataset_path> <dirs_path> <validation_path> <output_path>
+```
+- dim: int, the dimensionality of dataset
+- eps: double, the value of epsilon
+- dataset_path: string, the file of points in the dataset
+- dirs_path: string, the file of vectors used for validation
+- valid_path: string, the file of precomputed results for validation
+- output_path: string, the file of output results
+
+### Run DSMC
+
+For dominance graph construction:
+```sh
+./build/heur 0 <dim> <dataset_path> <ipdg_path> <dg_path>
 ```
 
-- dataset_path: string, the dataset file
-- output_path: string, the result file
-
-For example,
-
+For solution computation
 ```sh
-./build/ExactGRMR examples/test_2d.txt examples/E-GRMR-test_2d.txt
-```
-
-### Run H-GRMR
-
-```sh
-./build/HeurGRMR <dim> <dataset_path> <topk_path> <dirs_path> <validation_path> <output_path> <all>
+./build/heur 1 <dim> <eps> <dataset_path> <dg_path> <dirs_path> <validation_path> <output_path>
 ```
 
 - dim: int, the dimensionality of dataset
-- dataset_path: string, the dataset file
-- topk_path: string, the file stored the top-k results used in IPDG construction, use "na" for d=2
-- dirs_path: string, the file stored the random directions for validation
-- validation_path: string, the file stored the top-1 results of random directions in <dirs_path> for validation
-- output_path: string, the result file
-- all: int, "1" for all epsilon values from 0.01 to 0.1; "0" for epsilon=0.1 only
-
-For example,
-
-```sh
-./build/HeurGRMR 2 examples/test_2d_extremes.txt na examples/dirs_2d.txt examples/test_2d_validation.txt examples/H-GRMR-test_2d.txt 1
-./build/HeurGRMR 3 examples/test_3d_extremes.txt examples/test_3d_top2.txt examples/dirs_3d.txt examples/test_3d_validation.txt examples/H-GRMR-test_3d.txt 1
-```
+- dataset_path: string, the file of points in the dataset
+- ipdg_path: string, the file of IPDG, "na" for d=2
+- dg_path: string, the file of dominance graph
+- eps: double, the value of epsilon
+- dirs_path: string, the file of vectors used for validation
+- valid_path: string, the file of precomputed results for validation
+- output_path: string, the file of output results
 
 ## Baselines
 
-- eps-Kernel/HittingSet: See folder 'baselines1_epsKernel_HittingSet'. This implementation is based on <https://users.cs.duke.edu/~ssintos/kRMS_SEA/>. Note that two additional libraries [Boost 1.60.0](http://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.gz) and [ANN 1.1.2](http://www.cs.umd.edu/~mount/ANN/Files/1.1.2/ann_1.1.2.tar.gz) are required for compilation.
-- Greedy/HD-RRMS/Sphere: See folder 'baselines2_RMS_hd'. This implementation is based on <https://www.cse.ust.hk/~raywong/code/sigmod18-sphere.zip>.
-- 2D-RRMS: See folder 'baselines3_RMS_2d' for our implementation of 2D-RRMS in "Efficient Computation of Regret-ratio Minimizing Set: A Compact Maxima Representative" (SIGMOD 2018).
+- ANN: See folder 'ANN'. This implementation is based on <https://users.cs.duke.edu/~ssintos/kRMS_SEA/>. Note that two additional libraries [Boost 1.60.0](http://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.gz) and [ANN 1.1.2](http://www.cs.umd.edu/~mount/ANN/Files/1.1.2/ann_1.1.2.tar.gz) are required for compilation.
 
 ## Contact
 
