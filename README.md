@@ -12,6 +12,8 @@ A C++ implementation of algorithms in our paper "Computing Minimum Coresets for 
 
 ## How to run
 
+See the bash file "run-examples.sh" for examples of compilation and execution using the exemplar datasets in folder "examples".
+
 ### Compilation
 
 ```sh
