@@ -1,6 +1,6 @@
 # Generalized-RMS
 
-A C++ implementation of algorithms in our paper "Computing Minimum Coresets for Maxima Representation of Multidimensional Data".
+A C++ implementation of algorithms in our paper "Minimum Coresets for Maxima Representation of Multidimensional Data".
 
 ## Dependencies
 
