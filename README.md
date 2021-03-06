@@ -1,4 +1,4 @@
-# Generalized-RMS
+# Minimum Coresets for Maxima Representation of Multidimensional Data
 
 A C++ implementation of algorithms in our paper "Minimum Coresets for Maxima Representation of Multidimensional Data".
 
@@ -73,4 +73,4 @@ For solution computation
 
 ## Contact
 
-If there is any question, feel free to contact [Yanhao Wang](mailto:yanhao90@comp.nus.edu.sg).
+If there is any question, feel free to contact [Yanhao Wang](mailto:yanhao.wang@helsinki.fi).
