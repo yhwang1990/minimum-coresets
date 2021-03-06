@@ -1,4 +1,4 @@
-# Minimum Coresets for Maxima Representation of Multidimensional Data
+# Minimum Coresets
 
 A C++ implementation of algorithms in our paper "Minimum Coresets for Maxima Representation of Multidimensional Data".
 
