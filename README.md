@@ -73,4 +73,4 @@ For solution computation
 
 ## Contact
 
-If there is any question, feel free to contact [Yanhao Wang](mailto:yanhao.wang@helsinki.fi).
+If there is any question, feel free to contact [Yanhao Wang](mailto:yhwang@dase.ecnu.edu.cn).
